@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fr" class="h-full {{ html_class|default }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title|default('Stania') }}</title>
+    <link rel="icon" type="image/svg" href="{{asset('images/icon.png')}}" />
+    {{ encore_entry_link_tags('app') }}
+    {% block stylesheets %}{% endblock stylesheets %}
+</head>
+<body class="h-full {{ body_class|default }}">
+{% block body %}{% endblock body %}
+{{ encore_entry_script_tags('app') }}
+{{ encore_entry_script_tags('scripts/navbar') }}
+{{ encore_entry_script_tags('scripts/betlist') }}
+{{ encore_entry_script_tags('scripts/showPassword') }}
+{% block javascripts_html %}{% block javascripts %}{% endblock javascripts %}{% endblock javascripts_html %}
+</body>
+</html>

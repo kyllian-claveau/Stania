@@ -1,3 +1,82 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #e5e7eb;
+}
+
+.fixed-sidebar {
+    position: fixed;
+    width: calc(25%); /* Taille de la sidebar (ajustez selon vos besoins) */
+    overflow-y: auto; /* Activer le défilement vertical si nécessaire */
+}
+
+
+.selection-box {
+    height: calc(100vh - 7rem - 2rem);
+    overflow-y: auto;
+}
+
+.category-box {
+    height: calc(100vh - 7rem - 2rem);
+    overflow-y: auto;
+}
+
+.selection-list {
+    max-height: calc(100vh - 7rem - 20px - 200px);
+    overflow-y: auto;
+}
+
+/* Style pour la liste des paris sélectionnés */
+.bet-selection {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style pour chaque pari */
+.bet-selection li {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    position: relative; /* Position relative pour placer la croix */
+}
+
+/* Style pour le bouton de suppression (croix) */
+.remove-bet-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    color: #4d7c0f;
+    transition: color 0.3s;
+}
+
+.remove-bet-button:hover {
+    color: #4d7c0f;
+}
+
+/* Style pour le nom du match */
+.match-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+/* Style pour le nom de l'équipe et les côtes */
+.team-odds {
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+/* Style pour le gain potentiel */
+.potential-win {
+    font-style: italic;
+    color: #fff;
+}
+
+.commentBox {
+    background-color: #e5e7eb;
+}

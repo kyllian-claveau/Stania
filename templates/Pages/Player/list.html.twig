@@ -1,0 +1,70 @@
+{% extends 'Layout/Authenticated/base.html.twig' %}
+
+{% block content %}
+    <div class="mt-4 px-4 sm:px-6 lg:px-8">
+        <div class="sm:flex sm:items-center">
+            <div class="sm:flex-auto">
+                <h1 class="text-base font-semibold leading-6">Joueurs</h1>
+                <p class="mt-2 text-sm text-gray-700">Une liste de tous les joueurs.</p>
+            </div>
+            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                <a href="{{ path('app_player_create') }}" type="button"
+                   class="block rounded-md bg-secondary px-3 py-2 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="mt-8 flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                        <table class="min-w-full divide-y divide-primary">
+                            <thead class="bg-secondary text-white">
+                            <tr>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Photo du joueur</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Nom et Prénom du joueur</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Poste</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Numéro de maillot</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Équipe</th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for player in players %}
+                                <tr>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><div class="size-16 overflow-hidden">
+                                            <img class="object-cover w-full h-full"
+                                                 src="{{ asset("images/player/"~player.playerFilename) }}"
+                                                 alt="Photo du joueur">
+                                        </div></td>
+                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
+                                        <a href="{{ path('app_player_list', {'id': player.id}) }}" class="hover:underline text-primary">
+                                            {{ player.firstname }} {{ player.name }}
+                                        </a>
+                                    </td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ player.role }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ player.number }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ player.team.name }}</td>
+                                    <td class="whitespace-nowrap px-3 py-4 text-sm font-medium sm:pr-6">
+                                            <a href="{{ path('app_player_list', {'id': player.id}) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                                        </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 text-sm font-medium text-center" colspan="6">
+                                        Aucun joueurs enregistrés
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

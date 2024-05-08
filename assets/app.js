@@ -1,9 +1,19 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
-
-// any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
+
+document.getElementById('commentBtn').addEventListener('click', function() {
+    document.getElementById('comments').style.display = '';
+    document.getElementById('infos').style.display = 'none';
+    document.getElementById('compos').style.display = 'none';
+});
+
+document.getElementById('informationBtn').addEventListener('click', function() {
+    document.getElementById('comments').style.display = 'none';
+    document.getElementById('infos').style.display = '';
+    document.getElementById('compos').style.display = 'none';
+});
+
+document.getElementById('compositionBtn').addEventListener('click', function() {
+    document.getElementById('comments').style.display = 'none';
+    document.getElementById('infos').style.display = 'none';
+    document.getElementById('compos').style.display = '';
+});

@@ -1,0 +1,20 @@
+<div class="flex grow flex-col gap-y-5 overflow-y-auto bg-secondary px-6 pb-2 ring-1 ring-white/10">
+    <div class="flex h-48 shrink-0 items-center justify-center">
+        <a href="{{ path('app_index') }}"><img class="h-24 w-auto" src="{{ asset('images/betnow-logo.png') }}" alt="BetNow LOGO"></a>
+    </div>
+    <nav class="flex flex-1 flex-col">
+        <ul role="list" class="flex flex-1 flex-col gap-y-7">
+            <li>
+                <ul role="list" class="-mx-2 space-y-1">
+                    {% for item in sidebar_business.items('authenticated') %}
+                        {% include 'Widget/Navigation/Sidebar/item.html.twig' with item %}
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="-mx-6 mt-auto">
+                <div class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800">
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>

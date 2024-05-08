@@ -1,0 +1,77 @@
+{% extends '../../../Layout/Authenticated/base.html.twig' %}
+
+{% block content %}
+    <h3 class="mt-4 font-semibold leading-2 text-gray-900 text-2xl">Modifier un match</h3>
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-2">
+        {{ form_start(form, {'attr': {'class': 'bg-white shadow-sm ring-1 ring-gray-200 sm:rounded-xl md:col-span-2'}}) }}
+            <div class="px-4 py-6 sm:p-8">
+                <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.teamHome, 'Équipe à domicile') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.teamHome, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.teamAway, 'Équipe à l\'extérieur') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.teamAway, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.teamHomeOdds, 'Côte équipe à domicile') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.teamHomeOdds, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.drawOdds, 'Heure du match') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.drawOdds, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.teamAwayOdds, 'Côte équipe à l\'extérieur') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.teamAwayOdds, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.date, 'Date du match') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.date, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.time, 'Heure du match') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.time, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.weather, 'Météo du match') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.weather, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.homeScore, 'Score équipe à domicile') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.homeScore, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                    <div class="sm:col-span-3">
+                        {{ form_label(form.awayScore, 'Score équipe à l\'extérieur') }}
+                        <div class="mt-2">
+                            {{ form_widget(form.awayScore, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6'}}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
+                <a href="{{ path('app_team_list') }}" type="button" class="text-sm font-semibold leading-6 text-gray-900">Annuler</a>
+                <button type="submit" class="rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary">Sauvegarder</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
