@@ -54,7 +54,7 @@ RUN composer install --no-dev --optimize-autoloader
 USER root
 
 # Install Node.js and NPM
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash - \
     && apt-get install -y nodejs
 
 # Expose port 80
