@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.2.4-apache
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -20,14 +20,14 @@ RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
 
-COPY .docker/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
 
-RUN git clone https://github.com/kyllian-claveau/Stania /var/www/html
+RUN git clone https://github.com/kyllian-claveau/Stania.git /var/www/html
 
 RUN chown -R www-data:www-data /var/www/html
 
