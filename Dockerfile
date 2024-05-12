@@ -37,6 +37,7 @@ RUN groupadd -r stania && useradd -r -g stania stania \
     && mkdir -p /var/www/html \
     && chown -R stania:stania /var/www/html
 
+
 USER stania
 RUN composer install --no-dev --optimize-autoloader
 USER root
