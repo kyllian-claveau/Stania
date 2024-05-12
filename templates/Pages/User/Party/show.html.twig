@@ -1,0 +1,200 @@
+{% extends 'Layout/Unauthenticated/base.html.twig' %}
+{% block content %}
+    {% block modal %}
+        {% include 'Layout/Modal/betModal.html.twig' %}
+    {% endblock modal %}
+    <div class="z-20 max-sm:mt-14 md:col-span-4 overflow-y-auto">
+        <div class="p-4">
+            <div class="rounded-t-md bg-blue-950 p-4">
+                <div class="md:grid-cols-3 md:grid md:gap-4">
+                    <div class="md:col-span-1"></div>
+                    <div class="md:col-span-1"><h3 class="text-center text-white pb-4">{{ party.status }}</h3></div>
+                    <div class="md:col-span-1 text-red-600 text-end">
+                        {% if party.status == 'À venir' %}
+                            <p>{{ party.date | date('l d F Y', 'Europe/Paris', 'fr') }}
+                                - {{ party.time | date('H:i') }}</p>
+                        {% elseif party.status == 'En cours' %}
+                            <p>{{ minutesElapsed }} minutes de jeu</p>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="md:grid-cols-5 md:grid max-sm:justify-center">
+                    <div class="md:col-span-2 content-center text-end">
+                        <a href="{{ path('app_show_party', {'id': party.id}) }}">
+                            <p class="text-white text-xsm md:text-base mr-2 self-center">{{ party.teamHome.name }}</p>
+                        </a>
+                    </div>
+                    <div class="md:col-span-1 content-center text-center">
+                        <a href="{{ path('app_show_party', {'id': party.id}) }}">
+                            <div class="bg-lime-700 rounded-md px-2 py-2 text-white h-min self-center">
+                                {% if party.status == 'À venir' %} À définir {% else %}{{ party.homeScore }} - {{ party.awayScore }}{% endif %}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="md:col-span-2 content-center">
+                        <a href="{{ path('app_show_party', {'id': party.id}) }}">
+                            <p class="text-white text-xsm md:text-base ml-2 self-center">{{ party.teamAway.name }}</p>
+                        </a>
+                    </div>
+                </div>
+                <div class=""></div>
+            </div>
+            <div class="md:grid-cols-5 md:grid bg-lime-600">
+                <div class="p-4 md:col-span-1 border-r border-r-lime-600 text-center" id="commentBtn"><h3>
+                        Commentaire</h3></div>
+                <div class="p-4 md:col-span-1 border-r border-r-lime-600 text-center" id="compositionBtn"><h3>
+                        Composition</h3></div>
+                <div class="p-4 md:col-span-1 text-center" id="informationBtn"><h3>Information</h3></div>
+                {% if party.status != 'Terminé' %}
+                    <button data-modal-target="btnSection" data-modal-toggle="btnSection"
+                            class="p-4 md:col-span-1 border-r border-r-lime-600 text-center" type="button">
+                        Miser
+                    </button>{% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="p-4 md:col-span-1 border-r border-r-lime-600 text-center" id="editMatchBtn"><h3>
+                            Modifier</h3></div>{% endif %}
+            </div>
+            <div id="infos" class="rounded-md bg-gray-100 p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-gray-700">Date:</p>
+                        <p class="font-semibold">{{ party.date | date('d/m/Y') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Temps:</p>
+                        <p class="font-semibold">{{ party.weather }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Heure de début:</p>
+                        <p class="font-semibold">{{ party.time | date('H:i') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Heure de fin:</p>
+                        <p class="font-semibold">
+                            {% set newTime = party.time|date_modify('60 minutes') %}
+                            {{ newTime|date('H:i') }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Équipe à domicile:</p>
+                        <p class="font-semibold">{{ party.teamHome.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Côte de {{ party.teamHome.name }}:</p>
+                        <p class="font-semibold">{{ party.teamHomeOdds }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Côte du match nul:</p>
+                        <p class="font-semibold">{{ party.drawOdds }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Côte de {{ party.teamAway.name }}:</p>
+                        <p class="font-semibold">{{ party.teamAwayOdds }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Équipe à l'extérieur:</p>
+                        <p class="font-semibold">{{ party.teamAway.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Status:</p>
+                        <p class="font-semibold">{{ party.status }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-700">Score:</p>
+                        {% if party.status == 'À venir' %}
+                            <p class="font-semibold">À déterminer</p>
+                        {% elseif party.status == 'En cours' %}
+                            <p class="font-semibold">{{ party.homeScore }} - {{ party.awayScore }}</p>
+                        {% elseif party.status == 'Terminé' %}
+                            <p class="font-semibold">{{ party.homeScore }} - {{ party.awayScore }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div id="edit" class="rounded-b-md bg-white shadow-md p-6" style="display: none">
+                <h3 class="text-lg font-semibold mb-4">Éditer le match</h3>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <form action="{{ path('app_update_scores', {'id': party.id}) }}" method="post">
+                        <div class="flex justify-center mb-4">
+                            <button type="submit" name="home_goal"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded mr-2">
+                                Ajouter un but pour l'équipe domicile
+                            </button>
+                            <button type="submit" name="away_goal"
+                                    class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded">
+                                Ajouter un but pour l'équipe extérieure
+                            </button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="text-gray-600">Vous devez être un administrateur pour éditer ce match.</p>
+                {% endif %}
+            </div>
+            <div id="comments" class="rounded-md bg-white" style="display: none">
+                <h3 class="text-center text-lg font-semibold mb-4">Commentaires</h3>
+                <ul class="px-4">
+                    {% for comment in comments|reverse %}
+                        <li class="mb-2 commentBox p-3">
+                            <div class="flex items-center">
+                                {% if comment.minute is not null %}
+                                    <span class="text-gray-500 mr-2">({{ comment.minute }}')</span>
+                                {% endif %}
+                                <span>{{ comment.comment }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="mt-4">
+                        <h3 class="text-center text-lg font-semibold mb-4">Ajouter un commentaire</h3>
+                        <form action="{{ path('app_new_comment', {'id': party.id}) }}" method="post" class="px-4">
+                            {{ form_start(form) }}
+                            <div class="mt-2">
+                                {{ form_row(form.comment, {'attr': {'class': 'w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-lime-700', 'placeholder': 'Ajouter un commentaire...'}}) }}
+                            </div>
+                            <div class="mt-2">
+                                {{ form_row(form.minute, {'attr': {'class': 'w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-lime-700', 'placeholder': 'Minute de jeu'}}) }}
+                            </div>
+                            <button type="submit"
+                                    class="mb-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded mt-4 w-full">
+                                Poster
+                            </button>
+                            {{ form_end(form) }}
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+            <div id="compos" class="md:grid-cols-2 md:grid rounded-b-md bg-white" style="display: none;">
+                <div class="md:col-span-1 border-r border-r-lime-600">
+                    <div class="p-4 text-center mb-4 border-b border-b-lime-600">
+                        <p class="font-bold">Composition de {{ party.teamHome.name }}</p>
+                        <p>Nombre de joueurs : {{ party.teamHome.players|length }}</p>
+                    </div>
+                    <ul>
+                        {% for player in party.teamHome.players %}
+                            <li class="flex items-center mb-2 ml-2"><img
+                                        class="w-10 h-10 rounded-full object-cover mr-4"
+                                        src="{{ asset("images/player/"~player.playerFilename) }}"
+                                        alt="Photo du joueur">{{ player.firstname }} {{ player.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="md:col-span-1">
+                    <div class="p-4 text-center mb-4 border-b border-b-lime-600">
+                        <p class="font-bold">Composition de {{ party.teamAway.name }}</p>
+                        <p>Nombre de joueurs : {{ party.teamAway.players|length }}</p>
+                    </div>
+                    <ul>
+                        {% for player in party.teamAway.players %}
+                            <li class="flex items-center mb-2 ml-2"><img
+                                        class="w-10 h-10 rounded-full object-cover mr-4"
+                                        src="{{ asset("images/player/"~player.playerFilename) }}"
+                                        alt="Photo du joueur">{{ player.firstname }} {{ player.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'Layout/Unauthenticated/base.html.twig' %}
+{% block content %}
+        <div class="max-sm:mt-14 md:col-span-4 overflow-y-auto z-20">
+            <div class="py-4">
+                {% for party in partys %}
+                    <div class="md:grid-cols-2 grid gap-4 bg-blue-950 px-4 py-4 rounded-md border ">
+                        <div class=" md:col-span-1 md:grid-cols-5 md:grid max-sm:justify-center">
+                            <div class="md:col-span-2 content-center text-end"> <a href="{{ path('app_show_party', {'id': party.id}) }}"><p class="text-white text-xsm md:text-base mr-2 self-center">{{ party.teamHome.name }}</p></a></div>
+                            <div class="md:col-span-1 content-center text-center"><a href="{{ path('app_show_party', {'id': party.id}) }}"><div class="bg-lime-700 rounded-md px-2 py-2 text-white h-min self-center">
+                                        {% if party.status == 'À venir' %} <span class="text-xs">À définir</span> {% else %} {{ party.homeScore }} - {{ party.awayScore }} {% endif %}</div></a></div>
+                            <div class="md:col-span-2 content-center"> <a href="{{ path('app_show_party', {'id': party.id}) }}"><p class="text-white text-xsm md:text-base ml-2 self-center">{{ party.teamAway.name }}</p></a></div>
+                        </div>
+                        <div class="md:col-span-1 grid-cols-3 grid gap-2 place-content-end">
+                            <div class="col-span-1 bg-lime-700 rounded-md px-2 py-2 text-white text-center">
+                                <button class="text-xxsm md:text-xs bet-button" data-team="{{ party.teamHome.name }}" data-match-name="{{ party.teamHome.name }} vs {{ party.teamAway.name }}" data-odds="{{ party.teamHomeOdds }}" data-match="{{ party.id }}">{{ party.teamHome.name }}  <br> {{ party.teamHomeOdds }}</button>
+                            </div>
+                            <div class="col-span-1 bg-white rounded-md px-2 py-2 text-black text-center">
+                                <button class="text-xxsm md:text-xs bet-button" data-team="Nul" data-odds="{{ party.drawOdds }}" data-match-name="{{ party.teamHome.name }} vs {{ party.teamAway.name }}" data-match="{{ party.id }}">Nul <br>{{ party.drawOdds }}</button>
+                            </div>
+                            <div class="col-span-1 bg-red-600 rounded-md px-2 py-2 text-white text-center">
+                                <button class="text-xxsm md:text-xs bet-button" data-team="{{ party.teamAway.name }}" data-match-name="{{ party.teamHome.name }} vs {{ party.teamAway.name }}" data-odds="{{ party.teamAwayOdds }}" data-match="{{ party.id }}">{{ party.teamAway.name }}  <br> {{ party.teamAwayOdds }}</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}

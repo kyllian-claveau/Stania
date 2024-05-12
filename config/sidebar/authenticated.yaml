@@ -1,0 +1,33 @@
+items:
+
+    -
+        content: 'Widget/Navigation/Sidebar/Item/Party.html.twig'
+        url:
+            route: app_party_list
+        activating_routes:
+            - app_party_list
+            - app_party_create
+
+    -
+        content: 'Widget/Navigation/Sidebar/Item/Player.html.twig'
+        url:
+            route: app_player_list
+        activating_routes:
+            - app_player_list
+            - app_player_create
+
+    -
+        content: 'Widget/Navigation/Sidebar/Item/Team.html.twig'
+        url:
+            route: app_team_list
+        activating_routes:
+            - app_team_list
+            - app_team_create
+
+    -
+        content: 'Widget/Navigation/Sidebar/Item/Sport.html.twig'
+        url:
+             route: app_sport_list
+        activating_routes:
+                    - app_sport_list
+                    - app_sport_create

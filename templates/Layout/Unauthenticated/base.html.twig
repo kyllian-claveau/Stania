@@ -1,0 +1,128 @@
+{% extends 'Layout/Default/base.html.twig' %}
+
+{% block body %}
+    <section class="z-30 sticky top-0 h-14 text-center bg-blue-950 content-center ">
+        <div class="container mx-auto px-4">
+            <p class="text-white text-sm md:text-base font-bold">Les jeux d'argent sont interdits aux personnes de moins
+                de 18 ans.</p>
+            <p class="text-white text-sm md:text-base font-bold">Rappel : Jouer comporte des risques d'endettement et de
+                dépendance.</p>
+        </div>
+    </section>
+    <nav class="z-30 sticky top-14 h-14 bg-lime-700 flex justify-between items-center px-4">
+        <!-- Gauche -->
+        <div>
+            <a href="{{ path("app_index") }}">
+                <img src="{{ asset("images/betnow-logo.png") }}" width="150px">
+            </a>
+        </div>
+        <!-- Droite -->
+        <div>
+            <ul class="flex">
+                <li><a href="{{ path('app_index') }}" class="max-sm:hidden mr-4 italic text-white text-xsm md:text-lg hover:text-gray-300">Accueil</a></li>
+                <li><a href="{{ path('app_party_user_list') }}" class="max-sm:hidden mr-4 italic text-white text-xsm md:text-lg hover:text-gray-300">Visualiser tous les matchs</a></li>
+                <li><a href="{{ path('app_party_user_list_bet') }}" class="max-sm:hidden italic mr-4 text-white text-xsm md:text-lg hover:text-gray-300">Parier</a></li>
+                <li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_dashboard') }}" class="max-sm:hidden bg-lime-600 hover:bg-white text-white hover:text-lime-600 font-bold py-2 px-4 rounded-md">Bienvenue {{ app.user.firstname }} !</a>
+                    {% elseif is_granted('ROLE_USER') %}
+                        <a href="{{ path('app_admin_dashboard') }}" class="max-sm:hidden bg-lime-600 hover:bg-white text-white hover:text-lime-600 font-bold py-2 px-4 rounded-md">Bienvenue {{ app.user.firstname }} {{ app.user.lastname }}</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="max-sm:hidden bg-lime-600 hover:bg-white text-white hover:text-lime-600 font-bold py-2 px-4 rounded-md">Connexion</a>
+                    {% endif %}
+                </li>
+                <li class="block md:hidden">
+                    <a href="{{ path('app_admin_dashboard') }}" class="italic text-white text-xsm md:text-lg hover:text-gray-300 hidden md:block">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="grid grid-cols-1 md:grid-cols-8">
+        <!-- Sidebar gauche -->
+        <div class="max-sm:hidden col-span-2">
+            <div class="container mx-auto p-4 fixed-sidebar">
+                <div class="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 category-box h-full flex flex-col justify-between">
+                    <!-- Titre Sport -->
+                    <div class="mb-6">
+                        <h1 class="text-xl font-semibold mb-4 text-blue-950">Sport</h1>
+                        <div class="divide-y divide-gray-300">
+                            {% for sport in sports %}
+                                <div class="py-3 px-4 mb-2 bg-secondary rounded-lg hover:bg-lime-500 transition-colors duration-300">
+                                    <a href="{{ path('app_sport_list', {'id': sport.id}) }}"
+                                       class="text-lg text-white">{{ sport.name }}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Titre Match -->
+                    <div>
+                        <h1 class="text-xl font-semibold mb-4 text-lime-600">Match</h1>
+                        <div class="divide-y divide-gray-300">
+                            <div class="py-3 mb-2 px-4 bg-blue-950 rounded-lg hover:bg-blue-800 transition-colors duration-300">
+                                <a href="{{ path('app_index') }}" class="text-lg text-white">À venir</a>
+                            </div>
+                            <div class="py-3 mb-2 px-4 bg-blue-950 rounded-lg hover:bg-blue-800 transition-colors duration-300">
+                                <a href="{{ path('app_index') }}" class="text-lg text-white">En cours</a>
+                            </div>
+                            <div class="py-3 px-4 bg-blue-950 rounded-lg hover:bg-blue-800 transition-colors duration-300">
+                                <a href="{{ path('app_index') }}" class="text-lg text-white">Terminé</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Contenu principal -->
+        {% block content %}{% endblock content %}
+        <!-- Sidebar droite -->
+        <div class="z-20 col-span-2">
+            <div class="container mx-auto p-4 fixed-sidebar">
+                <div class="max-w-md mx-auto bg-white rounded shadow-lg p-6 selection-box flex flex-col">
+                    <!-- Titre -->
+                    <div class="mb-4">
+                        <h1 class="text-xl font-semibold mb-2">Mes Sélections de Paris Sportif</h1>
+                    </div>
+                    <!-- Liste de sélection -->
+                    <div class="mb-4 selection-list">
+                        <ul id="bet-selection">
+                            <!-- Les paris sélectionnés seront ajoutés ici -->
+                        </ul>
+                        <img src="{{ asset('images/no-bet.png') }}" alt="Image par défaut" id="default-image" style="display: none;">
+                    </div>
+                    <!-- Montant total des paris -->
+                    <div class="mt-auto text-lg font-semibold text-gray-800">
+                        Gain possible: <span id="potential-win">0.00€</span>
+                    </div>
+                    <!-- Champ de saisie pour le montant du pari -->
+                    <div class="mb-4">
+                        <label for="bet-amount" class="text-gray-800 font-semibold">Montant de la mise:</label>
+                        <input type="number" id="bet-amount" name="bet-amount" class="w-full px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-lime-700">
+                    </div>
+                    <!-- Formulaire pour envoyer les paris au serveur -->
+                    <form id="bet-form" action="{{ path('app_save_bet') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('save_bet') }}">
+                        <input type="hidden" name="bet-amount" id="bet-amount" value="...">
+                        <!-- Autres champs cachés pour les sélections de paris -->
+
+                        <!-- Bouton pour ajouter le pari à la liste -->
+                        <div class="flex justify-center">
+                            <button type="submit" id="add-bet-button" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Miser</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock body %}
+
+{% block javascripts_html %}
+    {% block javascripts %}{% endblock javascripts %}
+{% endblock javascripts_html %}
