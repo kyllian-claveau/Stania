@@ -87,6 +87,11 @@ class Party
         } else {
             $this->status = 'Terminé';
         }
+
+        if ($this->homeScore === null && $this->awayScore === null) {
+            $this->homeScore = 0;
+            $this->awayScore = 0;
+        }
     }
 
 

@@ -10,13 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class SportController extends AbstractController
+class sportController extends AbstractController
 {
     #[Route(path: '/list', name: 'app_sport_list')]
     public function list(EntityManagerInterface $entityManager): Response
     {
         $sports = $entityManager->getRepository(Sport::class)->findAll();
-        return $this->render('Pages/Sport/list.html.twig', [
+        return $this->render('Pages/Admin/Sport/list.html.twig', [
             'sports' => $sports,
         ]);
     }
@@ -33,7 +33,7 @@ class SportController extends AbstractController
             $entityManager->persist($sport);
             $entityManager->flush();
         }
-        return $this->render('Pages/Sport/create.html.twig', [
+        return $this->render('Pages/Admin/Sport/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -16,6 +16,9 @@ class Comments
     #[ORM\Column(type: 'string', length: 255)]
     private $comment;
 
+    #[ORM\Column(type: 'integer')]
+    private $minute;
+
     #[ORM\ManyToOne(targetEntity: Party::class, inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private $party;
@@ -33,6 +36,18 @@ class Comments
     public function setComment(string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getMinute(): ?int
+    {
+        return $this->minute;
+    }
+
+    public function setMinute(int $minute): self
+    {
+        $this->minute = $minute;
 
         return $this;
     }

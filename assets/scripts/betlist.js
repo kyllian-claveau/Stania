@@ -1,31 +1,43 @@
 document.addEventListener("DOMContentLoaded", function () {
     const betButtons = document.querySelectorAll(".bet-button");
-    const addBetButton = document.getElementById("add-bet-button");
-    const betSelectionList = document.getElementById("bet-selection");
     const betAmountInput = document.getElementById("bet-amount");
     const potentialWin = document.getElementById("potential-win");
+    const defaultImage = document.getElementById("default-image");
+    const betForm = document.getElementById("bet-form");
+    const betSelectionList = document.getElementById("bet-selection");
+    const addBetButton = document.getElementById("add-bet-button");
 
-    // Fonction pour mettre à jour la somme potentielle à gagner pour chaque pari
+    betAmountInput.addEventListener("input", function () {
+        updatePotentialWins();
+    });
+
+    function toggleDefaultImageVisibility() {
+        if (betSelectionList.children.length === 0) {
+            defaultImage.style.display = "block";
+        } else {
+            defaultImage.style.display = "none";
+        }
+    }
+
     function updatePotentialWins() {
         const betAmount = parseFloat(betAmountInput.value);
         if (isNaN(betAmount) || betAmount <= 0) {
-            // Si la mise est supprimée ou n'est pas un nombre valide, réinitialiser le gain potentiel à zéro
-            potentialWin.textContent = "$0.00";
+            potentialWin.textContent = "0.00€";
             return;
         }
 
-        let totalPotentialWin = betAmount; // Initialise la somme totale des gains potentiels avec le montant misé
+        let totalPotentialWin = betAmount;
 
         betSelectionList.querySelectorAll("li").forEach(function (li) {
             const odds = parseFloat(li.getAttribute("data-odds"));
-            totalPotentialWin *= odds; // Multiplie la cote avec le montant total
+            totalPotentialWin *= odds;
         });
 
-        // Mettre à jour la somme potentielle totale à gagner
         potentialWin.textContent = `${totalPotentialWin.toFixed(2)}€`;
+
+        toggleDefaultImageVisibility();
     }
 
-    // Récupérer les paris stockés localement et les ajouter à la liste de sélection
     function loadStoredBets() {
         const storedBets = JSON.parse(localStorage.getItem("storedBets"));
         if (storedBets) {
@@ -34,9 +46,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 betSelectionList.appendChild(li);
             });
         }
+        toggleDefaultImageVisibility();
     }
 
-    // Sauvegarder les paris actuels localement
     function saveCurrentBets() {
         const bets = [];
         betSelectionList.querySelectorAll("li").forEach(function (li) {
@@ -47,9 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
             bets.push({ team, odds, matchId, matchName });
         });
         localStorage.setItem("storedBets", JSON.stringify(bets));
+        toggleDefaultImageVisibility();
     }
 
-    // Créer un élément de liste pour un pari
     function createBetListItem(team, odds, matchId, matchName) {
         const li = document.createElement("li");
         li.classList.add("bg-blue-950", "rounded", "border", "p-4", "mb-4", "relative");
@@ -86,17 +98,17 @@ document.addEventListener("DOMContentLoaded", function () {
         return li;
     }
 
-    // Charger les paris stockés localement lors du chargement de la page
     loadStoredBets();
+    toggleDefaultImageVisibility();
 
-    // Gestionnaire d'événement pour les boutons de pari
+    console.log("Nombre de boutons de pari trouvés:", betButtons.length);
     betButtons.forEach(function (button) {
         button.addEventListener("click", function () {
+            console.log("Bouton de pari cliqué");
             const team = button.getAttribute("data-team");
             const odds = parseFloat(button.getAttribute("data-odds"));
             const matchId = button.getAttribute("data-match");
             const matchName = button.getAttribute("data-match-name");
-
             const existingBetOnMatch = betSelectionList.querySelector(`li[data-match="${matchId}"]`);
 
             if (existingBetOnMatch) {
@@ -109,17 +121,52 @@ document.addEventListener("DOMContentLoaded", function () {
             betSelectionList.appendChild(li);
             updatePotentialWins();
             saveCurrentBets();
+            toggleDefaultImageVisibility();
         });
     });
 
     // Gestionnaire d'événement pour le bouton "Ajouter au panier"
     addBetButton.addEventListener("click", function () {
-        betSelectionList.innerHTML = "";
-        betAmountInput.value = "";
-        potentialWin.textContent = "0.00€";
-        localStorage.removeItem("storedBets");
+        event.preventDefault();
+        const formData = new FormData(betForm);
+        const betSelections = getBetSelections();
+        formData.append('betSelections', JSON.stringify(betSelections));
+        formData.append('betAmount', betAmountInput.value);
+        formData.append('potentialWin', potentialWin.textContent);
+
+        console.log('Données à envoyer en base de données:', Array.from(formData.entries()));
+
+        fetch(betForm.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Bet saved:', data);
+                // Réinitialiser le formulaire ou effectuer d'autres actions si nécessaire
+                betForm.reset();
+                betSelectionList.innerHTML = "";
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error saving bet:', error);
+            });
     });
 
-    // Gestionnaire d'événement pour le changement du montant de la mise
-    betAmountInput.addEventListener("input", updatePotentialWins);
+    function getBetSelections() {
+        const betSelections = [];
+        betSelectionList.querySelectorAll("li").forEach(function (li) {
+            const team = li.getAttribute("data-team");
+            const odds = parseFloat(li.getAttribute("data-odds"));
+            const matchId = li.getAttribute("data-match");
+            const matchName = li.querySelector(".match-name").textContent;
+            betSelections.push({ team, odds, matchId, matchName });
+        });
+        return betSelections;
+    }
 });

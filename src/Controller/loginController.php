@@ -19,7 +19,7 @@ class loginController extends AbstractController
     {
         $form = $this->createForm(LoginFormType::class);
 
-        return $this->render('login.html.twig', [
+        return $this->render('Pages/Basic/Account/login.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -51,7 +51,7 @@ class loginController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('register.html.twig', [
+        return $this->render('Pages/Basic/Account/register.html.twig', [
             'form' => $form->createView(),
         ]);
     }

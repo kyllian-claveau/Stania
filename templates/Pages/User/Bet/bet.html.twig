@@ -1,0 +1,66 @@
+{% extends 'Layout/Unauthenticated/base.html.twig' %}
+
+{% block content %}
+    {% block modal %}
+        {% include 'Layout/Modal/betSelectionModal.html.twig' %}
+    {% endblock modal %}
+    <div class="max-sm:mt-14 md:col-span-4 overflow-y-auto z-20">
+        <div class="py-4">
+            <form id="bet-selection-form">
+                <table class="min-w-full divide-y divide-primary">
+                    <thead class="bg-secondary text-white">
+                    <tr>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Sélection</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Match</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Score</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Côte</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Date</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Heure de début</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Heure de fin</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Statut</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Météo</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                    {% for party in partys %}
+                        <tr>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <input type="checkbox" name="selected-parties[]" value="{{ party.id }}">
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 team-names">
+                                <a class="text-blue-500" href="{{ path('app_show_party',{'id': party.id}) }}">
+                                    <span class="teamHome">{{ party.teamHome.name }}</span> vs <span class="teamAway">{{ party.teamAway.name }}</span>
+                                </a>
+                            </td>
+
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {% if party.status == 'À venir' %} À définir {% else %}{{ party.homeScore }} - {{ party.awayScore }} {% endif %}
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <span class="teamHomeOdds">{{ party.teamHomeOdds }}</span> pour {{ party.teamHome.name }} <br>
+                                <span class="drawOdds">{{ party.drawOdds }}</span> pour le match nul <br>
+                                <span class="teamAwayOdds">{{ party.teamAwayOdds }}</span> pour {{ party.teamAway.name }}
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.date|date('d/m/Y') }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.time|date('H:i') }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {% set newTime = party.time|date_modify('60 minutes') %}
+                                {{ newTime|date('H:i') }}
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.status }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.weather }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td class="whitespace-nowrap py-4 text-sm font-medium text-center" colspan="6">
+                                Aucun match enregistré
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button id="open-selection-modal" type="button" data-modal-target="select-modal" data-modal-toggle="select-modal" class="bg-secondary text-white px-4 py-2 mt-4">Miser sur la sélection</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

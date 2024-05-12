@@ -1,0 +1,50 @@
+{% extends 'Layout/Unauthenticated/base.html.twig' %}
+
+{% block content %}
+        <!-- Contenu principal -->
+        <div class="max-sm:mt-14 md:col-span-4 overflow-y-auto z-20">
+            <div class="py-4">
+                <table class="min-w-full divide-y divide-primary">
+                    <thead class="bg-secondary text-white">
+                    <tr>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Match</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Score</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Côte</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Date</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Heure de début</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Heure de fin</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Statut</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Météo</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                    {% for party in partys %}
+                        <tr>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"><a class="text-blue-500" href="{{ path('app_show_party',{'id': party.id}) }}">{{ party.teamHome.name }}
+                                vs {{ party.teamAway.name }}</a> </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{% if party.status == 'À venir' %} À définir {% else %}{{ party.homeScore }}
+                                - {{ party.awayScore }} {% endif %}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.teamHomeOdds }}
+                                pour {{ party.teamHome.name }} <br> {{ party.drawOdds }} pour le match nul
+                                <br> {{ party.teamAwayOdds }} pour {{ party.teamAway.name }} </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.date|date('d/m/Y') }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.time|date('H:i') }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {% set newTime = party.time|date_modify('60 minutes') %}
+                                {{ newTime|date('H:i') }}
+                            </td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.status }}</td>
+                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ party.weather }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td class="whitespace-nowrap py-4 text-sm font-medium text-center" colspan="6">
+                                Aucun match enregistré
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+{% endblock %}

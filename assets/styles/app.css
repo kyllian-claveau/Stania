@@ -6,6 +6,47 @@ body {
     background-color: #e5e7eb;
 }
 
+/* Style des boutons */
+.btn-odd {
+    border: 1px solid transparent;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+/* Style par défaut des boutons */
+.btn-odd {
+    display: inline-block;
+    border: 1px solid #cbd5e0; /* Bordure */
+    background-color: #edf2f7; /* Couleur de fond */
+    color: #4a5568; /* Couleur du texte */
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s; /* Transition fluide */
+}
+
+/* Style des boutons lorsqu'ils sont sélectionnés */
+.btn-odd.selected {
+    background-color: #4a90e2; /* Couleur de fond différente lorsqu'ils sont sélectionnés */
+    border-color: #4a90e2; /* Bordure différente */
+    color: #ffffff; /* Couleur du texte */
+}
+
+/* Style des boutons au survol */
+.btn-odd:hover {
+    background-color: #e2e8f0; /* Couleur de fond au survol */
+    color: #2d3748; /* Couleur du texte */
+    border-color: #e2e8f0; /* Bordure au survol */
+}
+
+/* Style des boutons désactivés */
+.btn-odd:disabled {
+    opacity: 0.5; /* Opacité réduite */
+    cursor: not-allowed; /* Curseur non autorisé */
+}
+
+
 .fixed-sidebar {
     position: fixed;
     width: calc(25%); /* Taille de la sidebar (ajustez selon vos besoins) */
@@ -78,5 +119,17 @@ body {
 }
 
 .commentBox {
-    background-color: #e5e7eb;
+    background-color: #f3f4f6; /* Couleur de fond */
+    border-radius: 8px; /* Coins arrondis */
+    padding: 12px 16px; /* Espacement intérieur */
+    border: 1px solid #e2e8f0; /* Bordure */
+}
+
+.commentBox p {
+    margin: 0; /* Supprime les marges par défaut */
+}
+
+.commentBox .text-muted {
+    color: #718096; /* Couleur de texte grise */
+    font-size: 0.875rem; /* Taille de police légèrement plus petite */
 }

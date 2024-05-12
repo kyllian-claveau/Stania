@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/player')]
-class PlayerController extends AbstractController
+class playerController extends AbstractController
 {
     #[Route(path: '/list', name: 'app_player_list')]
     public function list(EntityManagerInterface $entityManager): Response
     {
         $players = $entityManager->getRepository(Player::class)->findAll();
-        return $this->render('Pages/Player/list.html.twig', [
+        return $this->render('Pages/Admin/Player/list.html.twig', [
             'players' => $players,
         ]);
     }
@@ -42,7 +42,7 @@ class PlayerController extends AbstractController
             $entityManager->persist($player);
             $entityManager->flush();
         }
-        return $this->render('Pages/Player/create.html.twig', [
+        return $this->render('Pages/Admin/Player/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }

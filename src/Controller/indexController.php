@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Bet;
 use App\Entity\Party;
 use App\Entity\Sport;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,10 +16,17 @@ class indexController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $partys = $entityManager->getRepository(Party::class)->findAll();
+        $filteredParties = array_filter($partys, function($party) {
+            $party->updateStatus();
+            return in_array($party->getStatus(), ['À venir', 'En cours']);
+        });
+
         $sports = $entityManager->getRepository(Sport::class)->findAll();
-        return $this->render('index.html.twig', [
-            'partys' => $partys,
-            'sports' => $sports
+        $bets = $entityManager->getRepository(Bet::class)->findAll();
+        return $this->render('Pages/Basic/Index/index.html.twig', [
+            'partys' => $filteredParties,
+            'sports' => $sports,
+            'bets' => $bets,
         ]);
     }
 }

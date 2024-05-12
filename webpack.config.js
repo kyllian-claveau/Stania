@@ -24,6 +24,7 @@ Encore
     .addEntry('scripts/navbar', './assets/scripts/navbar.js')
     .addEntry('scripts/betlist', './assets/scripts/betlist.js')
     .addEntry('scripts/showPassword', './assets/scripts/showPassword.js')
+    .addEntry('scripts/betselectionlist', './assets/scripts/betselectionlist.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
