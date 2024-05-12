@@ -11,13 +11,13 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev
 
-RUN docker-php-ext-install sodium intl curl fileinfo gd zip
+RUN docker-php-ext-install pdo_mysql sodium intl curl fileinfo gd zip
 
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
 
-COPY .docker/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
