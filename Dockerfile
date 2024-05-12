@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libpq-dev \
     libzip-dev \
-    npm \
+    npm
 
 RUN docker-php-ext-install pdo_mysql sodium intl curl fileinfo gd zip
 
