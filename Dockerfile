@@ -1,48 +1,50 @@
-# Utilisation de l'image officielle PHP avec Apache
 FROM php:8.2.4-apache
 
-# Installation des dépendances nécessaires
-RUN apt-get update && \
-    apt-get install -y \
-        git \
-        unzip \
-        libzip-dev \
-        libwebp-dev \
-        libicu-dev \
-        g++ \
-        libpng-dev \
-        libxml2-dev \
-        libcurl4-gnutls-dev \
-        libonig-dev \
-        libjpeg62-turbo-dev \
-        libfreetype6-dev \
-        libpq-dev \
-        supervisor \
-        npm \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install -j$(nproc) curl fileinfo gd intl mbstring pdo pdo_mysql pdo_pgsql zip \
-    && a2enmod rewrite \
-    && a2enmod brotli \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get autoremove -y && apt-get clean
+RUN apt-get update && apt-get install -y \
+    git \
+    libsodium-dev \
+    libicu-dev \
+    librabbitmq-dev \
+    libcurl4-openssl-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libonig-dev \
+    libpq-dev \
+    libzip-dev \
+    supervisor \
+    npm
 
-# Installation de Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.0.14
+RUN docker-php-ext-install pdo pdo_mysql sodium intl curl fileinfo gd pdo_pgsql pgsql zip
 
-# Clonage du dépôt
-RUN git clone "https://github.com/kyllian-claveau/stania.git" /var/www/html \
-    && chown -R www-data:www-data /var/www/html
+RUN apt clean && rm -rf /var/lib/apt/lists/*
+
+RUN a2enmod rewrite
+
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && php -r "unlink('composer-setup.php');"
+
+RUN git clone https://github.com/kyllian-claveau/Stania.git /var/www/html
+
+RUN chown -R www-data:www-data /var/www/html
 
 WORKDIR /var/www/html
 
-# Met à jour Composer
-RUN composer self-update --2
+RUN groupadd -r stania && useradd -r -g stania stania \
+    && mkdir -p /var/www/html \
+    && chown -R stania:stania /var/www/html
 
-# Copiez une configuration personnalisée pour Apache
-COPY 000-default.conf /etc/apache2/sites-available/
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+USER stania
+RUN composer install --no-dev --optimize-autoloader
+USER root
 
-# Exécutez Composer pour installer les dépendances
-RUN composer install --no-scripts --no-autoloader --verbose
+RUN npm install
+RUN npm run build
 
-RUN composer dump-autoload --optimize
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
