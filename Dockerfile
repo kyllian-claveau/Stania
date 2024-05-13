@@ -54,10 +54,13 @@ RUN composer install --no-dev --optimize-autoloader
 USER root
 
 # Install Node.js and NPM
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
-# Expose port 80
+RUN npm install -g npm@latest
+RUN npm run build
+
+# Exposex port 80
 EXPOSE 80
 
 # Start Apache server in the foreground
