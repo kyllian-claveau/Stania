@@ -58,7 +58,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
 RUN npm install -g npm@latest
-RUN npm run build
 
 # Exposex port 80
 EXPOSE 80
