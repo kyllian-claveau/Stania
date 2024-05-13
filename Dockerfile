@@ -1,22 +1,22 @@
-FROM php:8.1-apache
+FROM php:8.3-apache
 
 # Update and install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     libsodium-dev \
     libicu-dev \
-    librabbitmq-dev \
     libcurl4-openssl-dev \
     zlib1g-dev \
     libpng-dev \
     libonig-dev \
     libpq-dev \
     libzip-dev \
-    supervisor \
-    npm
+    # Node.js and NPM
+    curl \
+    gnupg
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql sodium intl curl fileinfo gd pdo_pgsql pgsql zip
+RUN docker-php-ext-install pdo_mysql sodium intl curl fileinfo gd zip
 
 # Cleanup to reduce image size
 RUN apt clean && rm -rf /var/lib/apt/lists/*
@@ -26,7 +26,6 @@ RUN a2enmod rewrite
 
 # Copy Apache configuration
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Install Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -54,10 +53,24 @@ RUN composer install --no-dev --optimize-autoloader
 # Switch back to root
 USER root
 
+# Install Node.js and NPM
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+# Update NPM
 RUN npm install -g npm@latest
+
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+
+# Build the frontend assets
 RUN npm run build
 
-# Exposex port 80
+# Expose port 80
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start Apache server in the foreground
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]

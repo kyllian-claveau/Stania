@@ -16,6 +16,11 @@ class betController extends AbstractController
     #[Route('/save-bet', name: 'app_save_bet', methods: ['POST'])]
     public function saveBet(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
+        // Vérifier si l'utilisateur est connecté
+        if (!$security->getUser()) {
+            return $this->json(['error' => 'Vous devez être connecté pour placer un pari.'], 403);
+        }
+
         $betSelections = json_decode($request->request->get('betSelections'), true);
         $betAmount = floatval($request->request->get('betAmount')); // Récupérer le montant total misé par l'utilisateur
         $potentialWin = floatval($request->request->get('potentialWin')); // Récupérer le gain potentiel
@@ -47,4 +52,5 @@ class betController extends AbstractController
         $entityManager->flush();
         return $this->json(['success' => true]);
     }
+
 }
