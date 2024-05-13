@@ -1,22 +1,22 @@
-FROM php:8.3-apache
+FROM php:8.1-apache
 
 # Update and install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     libsodium-dev \
     libicu-dev \
+    librabbitmq-dev \
     libcurl4-openssl-dev \
     zlib1g-dev \
     libpng-dev \
     libonig-dev \
     libpq-dev \
     libzip-dev \
-    # Node.js and NPM
-    curl \
-    gnupg
+    supervisor \
+    npm
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql sodium intl curl fileinfo gd zip
+RUN docker-php-ext-install pdo pdo_mysql sodium intl curl fileinfo gd pdo_pgsql pgsql zip
 
 # Cleanup to reduce image size
 RUN apt clean && rm -rf /var/lib/apt/lists/*
@@ -26,6 +26,7 @@ RUN a2enmod rewrite
 
 # Copy Apache configuration
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Install Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -53,18 +54,10 @@ RUN composer install --no-dev --optimize-autoloader
 # Switch back to root
 USER root
 
-# Install Node.js and NPM
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
-
-# Switch to user
-USER stania
-
 RUN npm install -g npm@latest
-RUN php bin/console doctrine:schema:update --force
+RUN npm run build
 
 # Exposex port 80
 EXPOSE 80
 
-# Start Apache server in the foreground
-CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
