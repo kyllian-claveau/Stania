@@ -1,9 +1,8 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    upload_directory: '%kernel.project_dir%/upload/files'
+    domain_name: '%env(DOMAIN_NAME)%'
+    database_name: '%env(DATABASE_NAME)%'
+    smtp_address: '%env(SMTP_ADDRESS)%'
 services:
     _defaults:
         autowire: true
@@ -14,6 +13,25 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    _instanceof:
+        App\SMTP\MessageHandler\MessageHandlerInterface:
+            tags:
+                - { name: 'app.smtp.message_handler' }
+
+
     App\Business\SidebarBusiness:
         arguments:
             $directoryConfiguration: '%kernel.project_dir%/config/sidebar'
+
+
+
+    Doctrine\Migrations\DependencyFactory: '@doctrine.migrations.dependency_factory'
+
+    App\Business\UpgradeBusiness:
+        arguments:
+            $updateCode: '%env(UPDATE_CODE)%'
+
+    App\Business\DatabaseBusiness:
+        arguments:
+            $withoutDatabaseConnection: '@doctrine.dbal.without_database_connection'
