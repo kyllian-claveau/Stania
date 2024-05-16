@@ -14,12 +14,6 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    _instanceof:
-        App\SMTP\MessageHandler\MessageHandlerInterface:
-            tags:
-                - { name: 'app.smtp.message_handler' }
-
-
     App\Business\SidebarBusiness:
         arguments:
             $directoryConfiguration: '%kernel.project_dir%/config/sidebar'
