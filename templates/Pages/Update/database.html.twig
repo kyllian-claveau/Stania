@@ -1,0 +1,56 @@
+{% extends 'Layout/Default/base.html.twig' %}
+
+{% block body %}
+    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-secondary">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img class="mx-auto h-48 w-auto" src="{{ asset('images/betnow-logo.png') }}"
+                 alt="MailCatcher logo">
+
+            {% if can_connect_to_database %}
+                <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+                    {{ 'need_update'|trans({}, 'update') }}
+                </h2>
+            {% endif %}
+        </div>
+
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+            <div class="bg-white px-3 py-12 shadow sm:rounded-lg sm:px-6 text-center">
+                <h3 class="text-xl font-bold pb-6">
+                    {% if not can_connect_to_database %}
+                        <p>{{ 'database.cant_connect'|trans({}, 'update') }}</p>
+                    {% elseif must_create_database %}
+                        <p>{{ 'database.create'|trans({'%database_name%': database_name}, 'update') }}</p>
+                    {% elseif must_migrate %}
+                        <p>{{ 'database.update'|trans({}, 'update') }}</p>
+                    {% endif %}
+                </h3>
+
+                {% if not can_connect_to_database %}
+                    <p class="italic">{{ 'action.update_connexion_credentials'|trans({}, 'update') }}</p>
+                {% else %}
+                    <p class="italic">{{ 'database.code'|trans({}, 'update') }} {{ 'command_help'|trans({}, 'update') }} </p>
+
+                    {{ form_start(form, {'attr': {'class': 'pt-6'}}) }}
+                    <div class="text-red-700">
+                        {{ form_errors(form.code) }}
+                    </div>
+                    <div class="pb-5">
+                        <div class="mt-2">
+                            {{ form_widget(form.code, {'attr': {'class': 'block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6', 'placeholder': 'Code'}}) }}
+                        </div>
+                    </div>
+                    <button type="submit"
+                            class="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary">
+                        {% if must_create_database %}
+                            {{ 'action.create_database'|trans({}, 'update') }}
+                        {% elseif must_migrate %}
+                            {{ 'action.update_database'|trans({}, 'update') }}
+                        {% endif %}
+                    </button>
+                    {{ form_end(form) }}
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock body %}

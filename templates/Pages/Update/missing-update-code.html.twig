@@ -1,0 +1,19 @@
+{% extends 'Layout/Default/base.html.twig' %}
+
+{% block body %}
+    <div class="flex min-h-full flex-col justify-center py-12 sm:px-3 lg:px-4">
+        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img class="mx-auto h-48 w-auto" src="{{ asset('images/logo.svg') }}"
+                 alt="MailCatcher logo">
+            <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{{ 'need_update'|trans({}, 'update') }}</h2>
+        </div>
+
+        <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+            <div class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+                <h3 class="text-xl text-center font-bold pb-6">{{ 'code.missing.title'|trans({}, 'update') }}</h3>
+                <p class="pb-5">{{ 'code.missing.explanation'|trans({}, 'update') }} {{ 'command_help'|trans({}, 'update') }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

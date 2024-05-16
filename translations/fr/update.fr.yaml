@@ -1,0 +1,17 @@
+need_update: Mise à jour nécessaire
+command_help: Vous pouvez également executer la commande 'composer update-database'.
+
+code:
+    missing:
+        title: Code de mise à jour non défini.
+        explanation: Il est nécessaire de définir le contenu de la variable d'environement "UPDATE_CODE".
+action:
+    create_database: Créer la base de donnée
+    update_database: Mettre à jour la base de donnée
+    update_connexion_credentials: Vérifiez que les informations de connexion à votre base de donnée sont correctes.
+
+database:
+    create: La base de donnée '%database_name%' n'existe pas.
+    update: Il faut mettre à jour le schema de la base de donnée.
+    code: Renseigner le contenu de la variable d'environment "CODE_UPDATE".
+    cant_connect: Connexion à la base de donnée impossible
