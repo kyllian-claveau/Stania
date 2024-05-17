@@ -18,8 +18,6 @@ services:
         arguments:
             $directoryConfiguration: '%kernel.project_dir%/config/sidebar'
 
-
-
     Doctrine\Migrations\DependencyFactory: '@doctrine.migrations.dependency_factory'
 
     App\Business\UpgradeBusiness:
